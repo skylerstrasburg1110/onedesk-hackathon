@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AnyDesk Demo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="icon" href="logo.png" type="image/svg">
+    <style>
+        .main-ticket {
+            border: 2px solid gold;
+            background-color: #fff9e6;
+        }
+        .grouped-ticket {
+            margin-left: 20px;
+            border-left: 2px dashed #666;
+        }
+        .group-info {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <header>
+        <nav>
+            <div class="logo">
+                AnyDesk<span class="ai-powered"> (Powered by AI) </span>
+            </div>
+            <ul>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn"><i class="fas fa-download"></i> Import</button>
+                        <div class="dropdown-content">
+                            <a href="#"><i class="fab fa-atlassian"></i> Jira</a>
+                            <a href="#"><i class="fas fa-headset"></i> Zendesk</a>
+                            <a href="#"><i class="fas fa-database"></i> SQL</a>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <button class="dropbtn" id="export-ticket"><i class="fas fa-file-export"></i> Export Tickets</button>
+                        <div class="dropdown-content">
+                            <a href="#" data-export-type="sql"><i class="fas fa-database"></i> SQL</a>
+                            <a href="#" data-export-type="txt"><i class="fas fa-file-alt"></i> Text</a>
+                            <a href="#" data-export-type="docx"><i class="fas fa-file-word"></i> DOCX</a>
+                        </div>
+                    </div>
+                </li>
+                <li><a href="index.html" class="cta-nav"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Create Ticket Section -->
+    <section id="create-ticket">
+        <h2>Create a New Ticket</h2>
+        <form id="ticket-form">
+            <div class="form-group">
+                <label for="subject">Subject</label>
+                <input type="text" id="subject" placeholder="Enter a subject for the ticket" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description <span class="char-counter">0/500</span></label>
+                <div class="textarea-wrapper">
+                    <textarea id="description" placeholder="Describe your ticket..." maxlength="500" required></textarea>
+                    <button type="button" class="cta ai-revise" id="revise-with-ai">
+                        <i class="fas fa-magic"></i> <span class="button-text">Revise with AI</span>
+                    </button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="priority">Priority</label>
+                <select id="priority" required>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="urgent">Urgent</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="assignee">Assign to</label>
+                <select id="assignee">
+                    <option value="unassigned">Unassigned</option>
+                    <option value="john">John Doe</option>
+                    <option value="jane">Jane Smith</option>
+                    <option value="alex">Alex Johnson</option>
+                </select>
+            </div>
+            <div class="button-group">
+                <button type="submit" class="cta primary">
+                    <i class="fas fa-plus-circle"></i> Submit Ticket
+                </button>
+            </div>
+        </form>
+    </section>
+
+    <!-- Tickets Box -->
+    <section id="tickets">
+        <div class="ticket-header">
+            <h2>Submitted Tickets</h2>
+            <div class="ticket-filters">
+                <button class="filter-btn active" data-priority="all">All</button>
+                <button class="filter-btn" data-priority="urgent">Urgent</button>
+                <button class="filter-btn" data-priority="high">High</button>
+                <button class="filter-btn" data-priority="medium">Medium</button>
+                <button class="filter-btn" data-priority="low">Low</button>
+                <button class="filter-btn" data-priority="in-progress">In Progress</button>
+                <button class="filter-btn" data-priority="done">Done</button>
+            </div>
+            <button class="cta roadmap-btn" id="best-solution">
+                <i class="fas fa-road"></i> <span class="button-text">Best Solution with AI</span>
+            </button>
+        </div>
+        <div id="tickets-box">
+            <!-- Active Tickets -->
+        </div>
+        <div id="in-progress-tickets-box">
+            <h3>In Progress Tickets</h3>
+            <!-- In Progress Tickets -->
+        </div>
+        <div id="done-tickets-box">
+            <h3>Done Tickets</h3>
+            <!-- Done Tickets -->
+        </div>
+        <!-- Roadmap Display -->
+        <div id="roadmap-display" class="roadmap-container" style="display: none;">
+            <h3>Best Solution Roadmap</h3>
+            <div id="roadmap-content" class="roadmap-content"></div>
+            <button class="cta secondary close-roadmap" id="close-roadmap">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </section>
+
+    <script>
+        const DEEPSEEK_API_KEY = "sk-a8d857e96a654ed58bfbad6507f6abf1"; // Replace with your actual DeepSeek API key
+        const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+
+        let ticketGroups = {};
+        let groupCounter = 1;
+        let currentMainTicket = null;
+
+        // Character Counter
+        const description = document.getElementById('description');
+        const charCounter = document.querySelector('.char-counter');
+
+        description.addEventListener('input', () => {
+            charCounter.textContent = `${description.value.length}/500`;
+        });
+
+        // Ticket Submission
+        document.getElementById('ticket-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const subject = document.getElementById('subject').value;
+            const descriptionValue = description.value;
+            const priority = document.getElementById('priority').value;
+            const assignee = document.getElementById('assignee').value;
+
+            const ticket = document.createElement('div');
+            ticket.className = `ticket priority-${priority}`;
+            ticket.innerHTML = `
+                <div class="ticket-header">
+                    <span class="priority ${priority}">${priority.toUpperCase()}</span>
+                    <span class="status">Open</span>
+                    <span class="assignee">Assigned to: ${assignee}</span>
+                    <button class="cta small danger delete-ticket"><i class="fas fa-trash"></i></button>
+                    <button class="cta small success mark-in-progress"><i class="fas fa-play"></i> In Progress</button>
+                    <button class="cta small success mark-done"><i class="fas fa-check"></i> Done</button>
+                </div>
+                <h4 class="ticket-subject">${subject}</h4>
+                <p class="ticket-description">${descriptionValue}</p>
+                <div class="ticket-actions">
+                    <button class="cta small set-main"><i class="fas fa-star"></i> Set as Main</button>
+                    <button class="cta small group-ticket" style="display: ${currentMainTicket ? 'inline-block' : 'none'}">
+                        <i class="fas fa-link"></i> Group with Main
+                    </button>
+                </div>
+                <div class="group-info"></div>
+            `;
+
+            document.getElementById('tickets-box').appendChild(ticket);
+            this.reset();
+            charCounter.textContent = '0/500';
+        });
+
+        // Delete Ticket
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-ticket')) {
+                const ticket = e.target.closest('.ticket');
+                const groupId = ticket.dataset.group;
+                if (groupId && ticketGroups[groupId]) {
+                    ticketGroups[groupId].tickets = ticketGroups[groupId].tickets.filter(t => t !== ticket);
+                    if (ticket === ticketGroups[groupId].mainTicket) {
+                        delete ticketGroups[groupId];
+                        currentMainTicket = null;
+                        updateGroupButtons();
+                    }
+                    if (ticketGroups[groupId] && ticketGroups[groupId].tickets.length === 0) {
+                        delete ticketGroups[groupId];
+                    }
+                }
+                ticket.remove();
+            }
+        });
+
+        // Mark as In Progress
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('mark-in-progress')) {
+                const ticket = e.target.closest('.ticket');
+                ticket.classList.add('in-progress-ticket');
+                ticket.querySelector('.status').textContent = 'In Progress';
+                document.getElementById('in-progress-tickets-box').appendChild(ticket);
+                e.target.remove();
+            }
+        });
+
+        // Mark as Done
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('mark-done')) {
+                const ticket = e.target.closest('.ticket');
+                ticket.classList.add('done-ticket');
+                ticket.querySelector('.status').textContent = 'Done';
+                document.getElementById('done-tickets-box').appendChild(ticket);
+                e.target.remove();
+            }
+        });
+
+        // Set as Main Ticket
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('set-main')) {
+                const ticket = e.target.closest('.ticket');
+                if (ticket.classList.contains('main-ticket')) {
+                    // Unset as main
+                    ticket.classList.remove('main-ticket');
+                    const groupId = ticket.dataset.group;
+                    if (groupId && ticketGroups[groupId]) {
+                        ticketGroups[groupId].tickets.forEach(t => {
+                            t.classList.remove('grouped-ticket');
+                            t.querySelector('.group-info').textContent = '';
+                            delete t.dataset.group;
+                        });
+                        delete ticketGroups[groupId];
+                    }
+                    currentMainTicket = null;
+                    e.target.innerHTML = '<i class="fas fa-star"></i> Set as Main';
+                } else {
+                    // Set as main
+                    if (currentMainTicket) {
+                        currentMainTicket.classList.remove('main-ticket');
+                        const oldGroupId = currentMainTicket.dataset.group;
+                        if (oldGroupId && ticketGroups[oldGroupId]) {
+                            ticketGroups[oldGroupId].tickets.forEach(t => {
+                                t.classList.remove('grouped-ticket');
+                                t.querySelector('.group-info').textContent = '';
+                                delete t.dataset.group;
+                            });
+                            delete ticketGroups[oldGroupId];
+                        }
+                    }
+                    currentMainTicket = ticket;
+                    ticket.classList.add('main-ticket');
+                    const groupId = `group-${groupCounter++}`;
+                    ticket.dataset.group = groupId;
+                    ticketGroups[groupId] = { mainTicket: ticket, tickets: [] };
+                    ticket.querySelector('.group-info').textContent = 'Main Ticket';
+                    e.target.innerHTML = '<i class="fas fa-star"></i> Unset as Main';
+                }
+                updateGroupButtons();
+            }
+        });
+
+        // Group with Main Ticket
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('group-ticket')) {
+                const ticket = e.target.closest('.ticket');
+                if (!currentMainTicket || ticket === currentMainTicket) return;
+
+                const groupId = currentMainTicket.dataset.group;
+                if (ticket.dataset.group === groupId) {
+                    // Ungroup
+                    ticket.classList.remove('grouped-ticket');
+                    ticket.querySelector('.group-info').textContent = '';
+                    ticketGroups[groupId].tickets = ticketGroups[groupId].tickets.filter(t => t !== ticket);
+                    delete ticket.dataset.group;
+                    e.target.innerHTML = '<i class="fas fa-link"></i> Group with Main';
+                } else {
+                    // Group
+                    if (ticket.dataset.group && ticketGroups[ticket.dataset.group]) {
+                        ticketGroups[ticket.dataset.group].tickets = ticketGroups[ticket.dataset.group].tickets.filter(t => t !== ticket);
+                    }
+                    ticket.classList.add('grouped-ticket');
+                    ticket.dataset.group = groupId;
+                    ticketGroups[groupId].tickets.push(ticket);
+                    ticket.querySelector('.group-info').textContent = `Grouped under: ${currentMainTicket.querySelector('.ticket-subject').textContent}`;
+                    e.target.innerHTML = '<i class="fas fa-unlink"></i> Ungroup';
+                    // Reorder DOM to show grouping visually
+                    currentMainTicket.insertAdjacentElement('afterend', ticket);
+                }
+            }
+        });
+
+        function updateGroupButtons() {
+            document.querySelectorAll('.group-ticket').forEach(btn => {
+                btn.style.display = currentMainTicket ? 'inline-block' : 'none';
+            });
+        }
+
+        // Export Tickets Functionality
+        document.querySelectorAll('.dropdown-content a[data-export-type]').forEach(option => {
+            option.addEventListener('click', (e) => {
+                e.preventDefault();
+                const exportType = option.dataset.exportType;
+                const tickets = Array.from(document.querySelectorAll('.ticket'));
+                
+                if (tickets.length === 0) {
+                    alert('No tickets to export.');
+                    return;
+                }
+
+                const ticketData = tickets.map(ticket => ({
+                    subject: ticket.querySelector('.ticket-subject').textContent,
+                    description: ticket.querySelector('.ticket-description').textContent,
+                    priority: ticket.querySelector('.priority').textContent,
+                    status: ticket.querySelector('.status').textContent,
+                    assignee: ticket.querySelector('.assignee').textContent.replace('Assigned to: ', ''),
+                    group: ticket.dataset.group || 'none',
+                    isMain: ticket.classList.contains('main-ticket') ? 'yes' : 'no'
+                }));
+
+                let content, filename;
+                switch (exportType) {
+                    case 'sql':
+                        content = 'CREATE TABLE tickets (\n' +
+                            '    id INTEGER PRIMARY KEY AUTOINCREMENT,\n' +
+                            '    subject VARCHAR(255),\n' +
+                            '    description TEXT,\n' +
+                            '    priority VARCHAR(50),\n' +
+                            '    status VARCHAR(50),\n' +
+                            '    assignee VARCHAR(100),\n' +
+                            '    group_id VARCHAR(50),\n' +
+                            '    is_main VARCHAR(3)\n);\n\n' +
+                            ticketData.map((ticket, index) => 
+                                `INSERT INTO tickets (subject, description, priority, status, assignee, group_id, is_main) VALUES ` +
+                                `('${ticket.subject.replace(/'/g, "''")}', ` +
+                                `'${ticket.description.replace(/'/g, "''")}', ` +
+                                `'${ticket.priority}', '${ticket.status}', '${ticket.assignee}', ` +
+                                `'${ticket.group}', '${ticket.isMain}');`
+                            ).join('\n');
+                        filename = 'tickets.sql';
+                        break;
+                    case 'txt':
+                        content = ticketData.map(ticket => 
+                            `Subject: ${ticket.subject}\n` +
+                            `Description: ${ticket.description}\n` +
+                            `Priority: ${ticket.priority}\n` +
+                            `Status: ${ticket.status}\n` +
+                            `Assignee: ${ticket.assignee}\n` +
+                            `Group: ${ticket.group === 'none' ? 'None' : ticket.group}` +
+                            `${ticket.isMain === 'yes' ? '\nMain Ticket: Yes' : ''}\n` +
+                            `----------------------------------------`
+                        ).join('\n');
+                        filename = 'tickets.txt';
+                        break;
+                    case 'docx':
+                        content = ticketData.map(ticket => 
+                            `Subject: ${ticket.subject}\n` +
+                            `Description: ${ticket.description}\n` +
+                            `Priority: ${ticket.priority}\n` +
+                            `Status: ${ticket.status}\n` +
+                            `Assignee: ${ticket.assignee}\n` +
+                            `Group: ${ticket.group === 'none' ? 'None' : ticket.group}` +
+                            `${ticket.isMain === 'yes' ? '\nMain Ticket: Yes' : ''}\n\n`
+                        ).join('');
+                        filename = 'tickets.docx';
+                        break;
+                }
+
+                const blob = new Blob([content], { type: 'text/plain' });
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            });
+        });
+
+        // Toggle Button Loading State
+        function toggleButtonLoading(button, isLoading) {
+            const icon = button.querySelector('i');
+            const text = button.querySelector('.button-text');
+            if (isLoading) {
+                button.disabled = true;
+                icon.classList.remove('fa-magic', 'fa-road');
+                icon.classList.add('fa-spinner', 'fa-spin');
+                text.textContent = 'Processing...';
+            } else {
+                button.disabled = false;
+                icon.classList.remove('fa-spinner', 'fa-spin');
+                icon.classList.add(button.id === 'revise-with-ai' ? 'fa-magic' : 'fa-road');
+                text.textContent = button.id === 'revise-with-ai' ? 'Revise with AI' : 'Best Solution';
+            }
+        }
+
+        // Revise with AI Button
+        document.getElementById('revise-with-ai').addEventListener('click', async () => {
+            const descriptionText = description.value.trim();
+            if (!descriptionText) {
+                alert('Please enter a description to revise.');
+                return;
+            }
+
+            const reviseButton = document.getElementById('revise-with-ai');
+            toggleButtonLoading(reviseButton, true);
+
+            try {
+                const response = await fetch(DEEPSEEK_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "You are an AI assistant tasked with revising text for clarity and conciseness."
+                            },
+                            {
+                                role: "user",
+                                content: `Revise this ticket description: "${descriptionText}"`
+                            }
+                        ],
+                        max_tokens: 500
+                    })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+                const data = await response.json();
+                const revisedText = data.choices[0]?.message?.content;
+                if (revisedText) {
+                    description.value = revisedText;
+                    charCounter.textContent = `${revisedText.length}/500`;
+                } else {
+                    alert('No revision returned from DeepSeek API.');
+                }
+            } catch (error) {
+                console.error('Error revising description:', error);
+                alert('An error occurred while revising the description.');
+            } finally {
+                toggleButtonLoading(reviseButton, false);
+            }
+        });
+
+        // Best Solution Button
+        document.getElementById('best-solution').addEventListener('click', async () => {
+            const tickets = Array.from(document.querySelectorAll('.ticket:not(.done-ticket)'));
+            if (tickets.length === 0) {
+                alert('No active tickets to analyze.');
+                return;
+            }
+
+            const bestSolutionButton = document.getElementById('best-solution');
+            toggleButtonLoading(bestSolutionButton, true);
+
+            const ticketData = tickets.map(ticket => ({
+                subject: ticket.querySelector('.ticket-subject').textContent,
+                description: ticket.querySelector('.ticket-description').textContent,
+                priority: ticket.querySelector('.priority').textContent.toLowerCase(),
+                assignee: ticket.querySelector('.assignee').textContent.replace('Assigned to: ', ''),
+                group: ticket.dataset.group || 'none',
+                isMain: ticket.classList.contains('main-ticket')
+            }));
+
+            try {
+                const response = await fetch(DEEPSEEK_API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "deepseek-chat",
+                        messages: [
+                            {
+                                role: "system",
+                                content: "You are an AI assistant that generates a prioritized roadmap for support tickets, considering ticket groups where main tickets should be prioritized."
+                            },
+                            {
+                                role: "user",
+                                content: `Given these tickets: ${JSON.stringify(ticketData)}, provide a prioritized roadmap or order for resolution based on priority, description, and group relationships (main tickets first, then their grouped tickets). Format a summary response as a clear, numbered list with ticket descriptions and reasoning.`
+                            }
+                        ],
+                        max_tokens: 1000
+                    })
+                });
+
+                if (!response.ok) throw new Error('API request failed');
+                const data = await response.json();
+                const roadmap = data.choices[0]?.message?.content;
+                if (roadmap) {
+                    const roadmapDisplay = document.getElementById('roadmap-display');
+                    const roadmapContent = document.getElementById('roadmap-content');
+                    roadmapContent.innerHTML = roadmap.replace(/\n/g, '<br>');
+                    roadmapDisplay.style.display = 'block';
+                } else {
+                    alert('Failed to generate a roadmap.');
+                }
+            } catch (error) {
+                console.error('Error generating roadmap:', error);
+                alert('An error occurred while generating the roadmap.');
+            } finally {
+                toggleButtonLoading(bestSolutionButton, false);
+            }
+        });
+
+        // Close Roadmap
+        document.getElementById('close-roadmap').addEventListener('click', () => {
+            document.getElementById('roadmap-display').style.display = 'none';
+        });
+
+        // Filter Tickets
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const priority = this.dataset.priority;
+
+                document.querySelectorAll('.ticket').forEach(ticket => {
+                    ticket.style.display = 'none';
+                    if (priority === 'all') {
+                        ticket.style.display = 'block';
+                    } else if (priority === 'in-progress' && ticket.classList.contains('in-progress-ticket')) {
+                        ticket.style.display = 'block';
+                    } else if (priority === 'done' && ticket.classList.contains('done-ticket')) {
+                        ticket.style.display = 'block';
+                    } else if (ticket.classList.contains(`priority-${priority}`)) {
+                        ticket.style.display = 'block';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

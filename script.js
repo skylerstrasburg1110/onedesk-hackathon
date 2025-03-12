@@ -1,4 +1,4 @@
-console.log("OneDesk Ticketing: Mockup ready, bud!");
+console.log("AnyDesk Ticketing: Mockup ready, bud!");
 
 function showNewTicket() {
     document.getElementById("new-ticket-modal").style.display = "flex";

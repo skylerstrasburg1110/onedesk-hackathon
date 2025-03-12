@@ -1,20 +1,20 @@
 /* General Styles */
 body {
     margin: 0;
-    font-family: 'Inter', sans-serif; /* Modern font */
+    font-family: 'Inter', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f9fafb; /* Light background for contrast */
+    color: #2d3748; /* Darker text for better contrast */
+    background-color: #f7fafc; /* Light background for contrast */
 }
 
 header {
     background: #ffffff;
-    border-bottom: 1px solid #e5e7eb; /* Subtle border */
+    border-bottom: 1px solid #e2e8f0; /* Subtle border */
     position: fixed;
     width: 100%;
     top: 0;
     z-index: 1000;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); /* Soft shadow */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 nav {
@@ -29,7 +29,13 @@ nav {
 .logo {
     font-size: 24px;
     font-weight: bold;
-    color: #1e40af; /* Modern blue */
+    color: #2b6cb0; /* Modern blue */
+}
+
+.ai-powered {
+    font-size: 14px;
+    color: #718096; /* Neutral gray */
+    font-weight: normal;
 }
 
 nav ul {
@@ -37,25 +43,41 @@ nav ul {
     margin: 0;
     padding: 0;
     display: flex;
-    gap: 20px; /* Spacing between nav items */
+    gap: 20px;
 }
 
 nav ul li a {
     text-decoration: none;
-    color: #4b5563; /* Neutral gray */
+    color: #4a5568; /* Neutral gray */
     font-weight: 500;
     transition: color 0.3s ease;
 }
 
 nav ul li a:hover {
-    color: #1e40af; /* Hover effect */
+    color: #2b6cb0; /* Hover effect */
+}
+
+/* Navigation Demo Button */
+.cta-nav {
+    padding: 8px 20px;
+    background: #2b6cb0; /* Matching the hero button color */
+    color: #ffffff;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.cta-nav:hover {
+    background: #3182ce; /* Hover effect */
+    transform: translateY(-2px);
 }
 
 /* Hero Section */
 .hero {
     padding: 120px 20px 80px;
     text-align: center;
-    background: linear-gradient(135deg, #1e40af, #3b82f6); /* Gradient background */
+    background: linear-gradient(135deg, #2b6cb0, #4c8fd9); /* Gradient background */
     color: #ffffff;
 }
 
@@ -68,14 +90,14 @@ nav ul li a:hover {
 .hero p {
     font-size: 18px;
     margin-bottom: 40px;
-    color: #e5e7eb; /* Light text for contrast */
+    color: #ebf8ff; /* Light text for contrast */
 }
 
 .hero .cta {
     display: inline-block;
     padding: 12px 30px;
     background: #ffffff;
-    color: #1e40af;
+    color: #2b6cb0;
     font-weight: 600;
     border-radius: 8px;
     text-decoration: none;
@@ -83,8 +105,8 @@ nav ul li a:hover {
 }
 
 .hero .cta:hover {
-    background: #f3f4f6;
-    transform: translateY(-2px); /* Slight lift on hover */
+    background: #ebf8ff;
+    transform: translateY(-2px);
 }
 
 /* Features Section */
@@ -97,7 +119,7 @@ nav ul li a:hover {
 #features h2 {
     font-size: 36px;
     margin-bottom: 40px;
-    color: #1e293b; /* Darker text for headings */
+    color: #2d3748; /* Darker text for headings */
 }
 
 .feature-grid {
@@ -109,7 +131,7 @@ nav ul li a:hover {
 }
 
 .feature {
-    background: #f9fafb;
+    background: #ffffff;
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
@@ -124,30 +146,30 @@ nav ul li a:hover {
 .feature h3 {
     font-size: 24px;
     margin-bottom: 15px;
-    color: #1e40af;
+    color: #2b6cb0;
 }
 
 .feature p {
     font-size: 16px;
-    color: #4b5563;
+    color: #4a5568;
 }
 
-/* Why OneDesk Section */
+/* Why AnyDesk Section */
 #why {
     padding: 80px 20px;
-    background: #f9fafb;
+    background: #f7fafc;
     text-align: center;
 }
 
 #why h2 {
     font-size: 36px;
     margin-bottom: 20px;
-    color: #1e293b;
+    color: #2d3748;
 }
 
 #why p {
     font-size: 18px;
-    color: #4b5563;
+    color: #4a5568;
     max-width: 800px;
     margin: 0 auto;
 }
@@ -162,12 +184,12 @@ nav ul li a:hover {
 #contact h2 {
     font-size: 36px;
     margin-bottom: 20px;
-    color: #1e293b;
+    color: #2d3748;
 }
 
 #contact p {
     font-size: 18px;
-    color: #4b5563;
+    color: #4a5568;
     margin-bottom: 40px;
 }
 
@@ -182,22 +204,22 @@ nav ul li a:hover {
 #contact input,
 #contact textarea {
     padding: 12px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
     border-radius: 8px;
     font-size: 16px;
-    background: #f9fafb;
+    background: #ffffff;
     transition: border-color 0.3s ease;
 }
 
 #contact input:focus,
 #contact textarea:focus {
-    border-color: #1e40af;
+    border-color: #2b6cb0;
     outline: none;
 }
 
 #contact button {
     padding: 12px 30px;
-    background: #1e40af;
+    background: #2b6cb0;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -207,23 +229,490 @@ nav ul li a:hover {
 }
 
 #contact button:hover {
-    background: #3b82f6;
+    background: #3182ce;
+}
+
+/* Create Ticket Section */
+#create-ticket {
+    padding: 120px 20px 40px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#create-ticket h2 {
+    font-size: 28px;
+    color: #2d3748;
+    margin-bottom: 20px;
+}
+
+#ticket-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-size: 16px;
+    color: #2d3748;
+    font-weight: 500;
+}
+
+.form-group textarea,
+.form-group select {
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 16px;
+    background: #ffffff;
+    transition: border-color 0.3s ease;
+}
+
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: #2b6cb0;
+    outline: none;
+}
+
+/* Tickets Box */
+#tickets {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+#tickets h2 {
+    font-size: 28px;
+    color: #2d3748;
+    margin-bottom: 20px;
+}
+
+#tickets-box {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.ticket {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #2b6cb0;
+}
+
+.ticket p {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: #4a5568;
+}
+
+.ticket .priority {
+    font-weight: 600;
+}
+
+.ticket .priority.low {
+    color: #38a169; /* Green for low priority */
+}
+
+.ticket .priority.medium {
+    color: #dd6b20; /* Orange for medium priority */
+}
+
+.ticket .priority.high {
+    color: #e53e3e; /* Red for high priority */
+}
+
+.ticket .status {
+    font-weight: 600;
+    color: #2b6cb0;
 }
 
 /* Footer */
 footer {
     text-align: center;
     padding: 20px;
-    background: #1e293b;
+    background: #2d3748;
     color: #ffffff;
     font-size: 14px;
 }
 
 footer a {
-    color: #3b82f6;
+    color: #63b3ed;
     text-decoration: none;
 }
 
 footer a:hover {
     text-decoration: underline;
+}
+
+/* Dropdown Styles */
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropbtn {
+    padding: 8px 20px;
+    background: #2b6cb0;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.dropbtn:hover {
+    background: #3182ce;
+    transform: translateY(-2px);
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #ffffff;
+    min-width: 160px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    z-index: 1;
+}
+
+.dropdown-content a {
+    color: #4a5568;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background 0.3s ease;
+}
+
+.dropdown-content a:hover {
+    background: #f7fafc;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Secondary Button */
+.cta.secondary {
+    background: #718096;
+    margin-left: 10px;
+}
+
+.cta.secondary:hover {
+    background: #4a5568;
+}
+
+/* Revise Ticket with AI Button */
+.revise-ai {
+    padding: 8px 16px;
+    background: #38a169;
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.revise-ai:hover {
+    background: #2f855a;
+}
+
+/* Ticket Status Button */
+
+/* Done Tickets */
+.done-ticket {
+    opacity: 0.7;
+    background: #f0f0f0;
+    border-left: 4px solid #38a169 !important;
+}
+
+.done-ticket .status {
+    color: #38a169;
+}
+
+#done-tickets-box {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+#done-tickets-box h3 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+/* Mark as Done Button */
+.mark-done {
+    background: #38a169;
+    color: white;
+    border: none;
+    padding: 4px 8px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.mark-done:hover {
+    background: #2f855a;
+}
+
+/* Best Solution Button */
+.roadmap-btn {
+    background: #805ad5;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.roadmap-btn:hover {
+    background: #6b46c1;
+}
+
+/* In Progress Tickets */
+.in-progress-ticket {
+    opacity: 0.9;
+    background: #fffaf0;
+    border-left: 4px solid #dd6b20 !important;
+}
+
+.in-progress-ticket .status {
+    color: #dd6b20;
+}
+
+#in-progress-tickets-box {
+    margin-top: 2rem;
+    padding-top: 1rem;
+    border-top: 2px solid #e2e8f0;
+}
+
+#in-progress-tickets-box h3 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+/* Assignee Label */
+.assignee {
+    font-size: 0.9rem;
+    color: #718096;
+    margin-left: 10px;
+}
+
+/* Modern Text Box */
+.textarea-wrapper {
+    position: relative;
+    margin-bottom: 1rem;
+}
+
+textarea {
+    width: 100%;
+    padding: 1.5rem;
+    border: 2px solid #e2e8f0; /* Light border */
+    border-radius: 12px; /* Rounded corners */
+    font-size: 16px;
+    min-height: 150px; /* Minimum height */
+    transition: all 0.3s ease;
+    background: #ffffff;
+    resize: vertical; /* Allow vertical resizing */
+    color: #2d3748; /* Dark text for contrast */
+}
+
+textarea:focus {
+    border-color: #2b6cb0; /* Blue border on focus */
+    box-shadow: 0 4px 6px rgba(43, 108, 176, 0.1); /* Subtle shadow */
+    outline: none; /* Remove default outline */
+}
+
+.char-counter {
+    float: right;
+    font-size: 0.9rem;
+    color: #718096; /* Neutral gray */
+}
+
+/* Revise with AI Button */
+.ai-revise {
+    position: absolute;
+    bottom: 15px;
+    right: 15px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #2b6cb0, #4c8fd9); /* Gradient background */
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.ai-revise i {
+    font-size: 14px;
+}
+
+.ai-revise:hover {
+    background: linear-gradient(135deg, #4c8fd9, #2b6cb0); /* Reverse gradient on hover */
+    transform: translateY(-2px); /* Slight lift */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Modern Buttons */
+.cta {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    cursor: pointer;
+}
+
+.cta i {
+    font-size: 14px;
+}
+
+.cta.primary {
+    background: #2b6cb0; /* Blue background */
+    color: white;
+}
+
+.cta.primary:hover {
+    background: #3182ce; /* Lighter blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cta.secondary {
+    background: #718096; /* Gray background */
+    color: white;
+}
+
+.cta.secondary:hover {
+    background: #4a5568; /* Darker gray on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.cta.small {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+}
+
+.cta.danger {
+    background: #e53e3e; /* Red background */
+    color: white;
+}
+
+.cta.danger:hover {
+    background: #c53030; /* Darker red on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mark as Done Button */
+.mark-done {
+    background: #38a169; /* Green background */
+    color: white;
+}
+
+.mark-done:hover {
+    background: #2f855a; /* Darker green on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mark as In Progress Button */
+.mark-in-progress {
+    background: #dd6b20; /* Orange background */
+    color: white;
+}
+
+.mark-in-progress:hover {
+    background: #c05621; /* Darker orange on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Roadmap Display */
+.roadmap-container {
+    margin-top: 2rem;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-left: 4px solid #805ad5; /* Matches the Best Solution button color */
+}
+
+.roadmap-container h3 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1rem;
+}
+
+.roadmap-content {
+    font-size: 16px;
+    color: #4a5568;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+.roadmap-content ol {
+    padding-left: 20px;
+}
+
+.roadmap-content li {
+    margin-bottom: 10px;
+}
+
+.close-roadmap {
+    background: #718096;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-roadmap:hover {
+    background: #4a5568;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Subject Input Field */
+#subject {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e2e8f0; /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    font-size: 16px;
+    color: #2d3748; /* Dark text for contrast */
+    background: #ffffff; /* White background */
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 20px; /* Spacing below the input */
+}
+
+#subject:focus {
+    border-color: #2b6cb0; /* Blue border on focus */
+    box-shadow: 0 4px 6px rgba(43, 108, 176, 0.1); /* Subtle shadow */
+    outline: none; /* Remove default outline */
+}
+
+#subject::placeholder {
+    color: #a0aec0; /* Light gray placeholder text */
+    font-weight: 400;
 }
