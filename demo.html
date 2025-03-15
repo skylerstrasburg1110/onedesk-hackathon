@@ -56,6 +56,70 @@
         </nav>
     </header>
 
+
+        <!-- Team Chat -->
+    <div class="team-chat">
+        <h3>Simulated Team Chat</h3>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Chat messages will be dynamically added here -->
+        </div>
+        <div class="chat-input">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <button id="send-message"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+
+    <script>
+                // Simulated Team Members
+        const teamMembers = [
+            { name: "John Doe", id: "john" },
+            { name: "Jane Smith", id: "jane" },
+            { name: "Alex Johnson", id: "alex" }
+        ];
+
+        // Simulated Chat Messages
+        const chatMessages = [
+            { sender: "John Doe", text: "Hey team, let's prioritize the printer issue.", timestamp: "10:00 AM" },
+            { sender: "Jane Smith", text: "Agreed. I'll take a look at it.", timestamp: "10:05 AM" },
+            { sender: "Alex Johnson", text: "I can help with the server update after that.", timestamp: "10:07 AM" }
+        ];
+
+        // Render Chat Messages
+        const chatMessagesContainer = document.getElementById('chat-messages');
+        chatMessages.forEach(message => {
+            const messageElement = document.createElement('div');
+            messageElement.className = 'chat-message';
+            messageElement.innerHTML = `
+                <div class="sender">${message.sender}</div>
+                <div class="text">${message.text}</div>
+                <div class="timestamp">${message.timestamp}</div>
+            `;
+            chatMessagesContainer.appendChild(messageElement);
+        });
+
+        // Send Message Functionality
+        document.getElementById('send-message').addEventListener('click', () => {
+            const input = document.getElementById('chat-input');
+            const messageText = input.value.trim();
+            if (!messageText) return;
+
+            const currentUser = teamMembers[0]; // Simulate the current user
+            const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+            const messageElement = document.createElement('div');
+            messageElement.className = 'chat-message';
+            messageElement.innerHTML = `
+                <div class="sender">${currentUser.name}</div>
+                <div class="text">${messageText}</div>
+                <div class="timestamp">${timestamp}</div>
+            `;
+            chatMessagesContainer.appendChild(messageElement);
+            input.value = '';
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight; // Scroll to bottom
+        });
+    </script>
+
+
     <!-- Create Ticket Section -->
     <section id="create-ticket">
         <h2>Create a New Ticket</h2>

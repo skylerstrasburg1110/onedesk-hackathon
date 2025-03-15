@@ -12,20 +12,23 @@
         <nav>
             <div class="logo">AnyDesk</div>
             <ul>
-                <li>
-                </li>
                 <li><a href="#features">Features</a></li>
                 <li><a href="#why">Why AnyDesk</a></li>
                 <li><a href="#contact">Contact</a></li>
-                <div class="dropdown">
+                <li class="dropdown">
                     <button class="dropbtn">Products</button>
                     <div class="dropdown-content">
                         <a href="#voip-qa">VOIP QA Monitoring</a>
                         <a href="demo.html">Ticketing System</a>
                     </div>
-                </div>
+                </li>
                 <li><a href="demo.html" class="cta-nav">Try our Demo</a></li>
             </ul>
+            <div class="menu-icon" id="menu-icon">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
         </nav>
     </header>
     <section class="hero">
@@ -70,3 +73,14 @@
     <script src="script.js"></script>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+    const menuIcon = document.getElementById('menu-icon');
+    const navUl = document.querySelector('nav ul');
+
+    menuIcon.addEventListener('click', function () {
+        navUl.classList.toggle('active');
+    });
+});
+</script>
