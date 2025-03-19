@@ -966,3 +966,99 @@ html, body {
         padding: 0 20px;
     }
 }
+
+/* VoIP Page Specific Styles */
+.hero-content {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.metrics {
+    background: #f7fafc;
+    padding: 80px 20px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.metric-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.metric-value {
+    font-size: 2.5rem;
+    color: #2b6cb0;
+    margin: 15px 0;
+    font-weight: 700;
+}
+
+.metric-label {
+    color: #718096;
+}
+
+.ai-capabilities {
+    padding: 80px 20px;
+    background: white;
+}
+
+.capability-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.capability {
+    text-align: center;
+    padding: 30px;
+}
+
+.ai-icon {
+    width: 80px;
+    height: 80px;
+    background: #2b6cb0;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-icon i {
+    color: white;
+    font-size: 2rem;
+}
+
+.cta-section {
+    text-align: center;
+    padding: 80px 20px;
+    background: linear-gradient(135deg, #2b6cb0, #4c8fd9);
+    color: white;
+}
+
+.cta-group {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+@media (max-width: 768px) {
+    .cta-group {
+        flex-direction: column;
+    }
+    
+    .metric-value {
+        font-size: 2rem;
+    }
+}
