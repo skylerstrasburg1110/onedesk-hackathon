@@ -80,8 +80,9 @@ nav ul li a:hover {
     text-align: center;
     background: linear-gradient(135deg, #2b6cb0, #4c8fd9);
     color: #ffffff;
-    margin-left: 300px; /* Offset for the left chat */
-    margin-right: 300px; /* Offset for the right chat */
+    /* Remove margin-left and margin-right to span the entire width */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .hero h1 {
