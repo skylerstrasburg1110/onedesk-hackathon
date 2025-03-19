@@ -118,8 +118,9 @@ nav ul li a:hover {
     padding: 80px 20px;
     background: #ffffff;
     text-align: center;
-    margin-left: 300px; /* Offset for the left chat */
-    margin-right: 300px; /* Offset for the right chat */
+    /* Remove margin-left and margin-right to span the entire width */
+    margin-left: 0;
+    margin-right: 0;
 }
 
 #features h2 {
